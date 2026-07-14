@@ -540,10 +540,11 @@ function Groupbox:AddSlider(idx, options)
 end
 
 function Groupbox:AddInput(idx, options)
+    local parent = self
     local Input = setmetatable({}, Element)
     Input.__index = Input
     
-    local self = setmetatable({
+    local inputSelf = setmetatable({
         Type = "Input",
         Value = options.Default or "",
         Callback = options.Callback,
@@ -572,7 +573,7 @@ function Groupbox:AddInput(idx, options)
         Position = UDim2.new(0, 0, 0, 18),
         BackgroundColor3 = Color3.fromRGB(30, 30, 30),
         BorderColor3 = Color3.fromRGB(60, 60, 60),
-        Text = self.Value,
+        Text = inputSelf.Value,
         PlaceholderText = options.Placeholder or "",
         TextColor3 = Color3.fromRGB(200, 200, 200),
         PlaceholderColor3 = Color3.fromRGB(120, 120, 120),
@@ -595,25 +596,26 @@ function Groupbox:AddInput(idx, options)
     if options.Finished then
         textBox.FocusLost:Connect(function(enter)
             if enter then
-                self:SetValue(textBox.Text)
+                inputSelf:SetValue(textBox.Text)
             end
         end)
     else
         textBox:GetPropertyChangedSignal("Text"):Connect(function()
-            self:SetValue(textBox.Text)
+            inputSelf:SetValue(textBox.Text)
         end)
     end
     
-    self._ui = container
-    if idx then Options[idx] = self end
-    return self
+    inputSelf._ui = container
+    if idx then Options[idx] = inputSelf end
+    return inputSelf
 end
 
 function Groupbox:AddDropdown(idx, options)
+    local parent = self
     local Dropdown = setmetatable({}, Element)
     Dropdown.__index = Dropdown
     
-    local self = setmetatable({
+    local dropdownSelf = setmetatable({
         Type = "Dropdown",
         Value = options.Multi and {} or (type(options.Default) == "number" and options.Values[options.Default] or options.Default or options.Values[1]),
         Multi = options.Multi or false,
