@@ -11,7 +11,13 @@ local Library = {
     UserInputService = game:GetService("UserInputService"),
     TweenService = game:GetService("TweenService"),
     HttpService = game:GetService("HttpService"),
-    CoreGui = game:GetService("CoreGui"),
+    CoreGui = (function()
+        local success, result = pcall(function()
+            return game:GetService("CoreGui")
+        end)
+        if success then return result end
+        return game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    end)(),
     
     -- State
     ToggleKeybind = nil,
